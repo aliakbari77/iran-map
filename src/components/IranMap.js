@@ -4,6 +4,7 @@ import './IranMap.css';
 
 import CityModal from './CityModal';
 
+import axios from 'axios'
 
 class IranMap extends React.Component {
 
@@ -13,10 +14,17 @@ class IranMap extends React.Component {
         isModalOpen: false,
     };
 
+    async componentDidMount() {
+        const {data: citiesData} = await axios.get("http://localhost:9000/cities")
+        this.setState({citiesData})
+    }
 
-    cityClicked = (id) => (event) => {
+
+    cityClicked =  (id) => async (event) => {
         event.preventDefault();
         // Fetch city details and open modal
+        const {data: selectedCity} = await axios.get(`http://localhost:9000/cities/${id}`)
+        this.setState({selectedCity, isModalOpen: true})
     };
 
     closeModal = () => {
